@@ -1,0 +1,210 @@
+{
+  "id": "d8f1c7aa-0000-4000-8000-000000000001",
+  "name": "Support Agent",
+  "description": "Customer support agent with docs retrieval and API access (test fixture; schema-faithful to Langflow 1.x exports).",
+  "is_component": false,
+  "last_tested_version": "1.4.2",
+  "endpoint_name": null,
+  "tags": [],
+  "data": {
+    "nodes": [
+      {
+        "id": "ChatInput-b6UCc",
+        "type": "genericNode",
+        "position": { "x": 100, "y": 200 },
+        "data": {
+          "id": "ChatInput-b6UCc",
+          "type": "ChatInput",
+          "display_name": "Customer Message",
+          "description": "Get chat inputs from the Playground.",
+          "node": {
+            "base_classes": ["Message"],
+            "display_name": "Customer Message",
+            "template": {
+              "_type": "Component",
+              "input_value": { "type": "str", "value": "", "name": "input_value" },
+              "should_store_message": { "type": "bool", "value": true, "name": "should_store_message" },
+              "sender": { "type": "str", "value": "User", "name": "sender" }
+            }
+          }
+        }
+      },
+      {
+        "id": "Prompt-9xQz1",
+        "type": "genericNode",
+        "position": { "x": 300, "y": 200 },
+        "data": {
+          "id": "Prompt-9xQz1",
+          "type": "Prompt",
+          "display_name": "Prompt",
+          "node": {
+            "base_classes": ["Message"],
+            "template": {
+              "_type": "Component",
+              "template": { "type": "prompt", "value": "Answer using {context}: {question}", "name": "template" }
+            }
+          }
+        }
+      },
+      {
+        "id": "Agent-Ff3Lp",
+        "type": "genericNode",
+        "position": { "x": 500, "y": 200 },
+        "data": {
+          "id": "Agent-Ff3Lp",
+          "type": "Agent",
+          "display_name": "Support Agent",
+          "node": {
+            "base_classes": ["Message"],
+            "template": {
+              "_type": "Component",
+              "agent_llm": { "type": "str", "value": "OpenAI", "name": "agent_llm" },
+              "api_key": { "_input_type": "SecretStrInput", "type": "str", "value": "fake-hardcoded-credential-for-tests", "name": "api_key" },
+              "system_prompt": { "type": "str", "value": "You are a support agent.", "name": "system_prompt" }
+            }
+          }
+        }
+      },
+      {
+        "id": "AstraDB-K2mNv",
+        "type": "genericNode",
+        "position": { "x": 300, "y": 400 },
+        "data": {
+          "id": "AstraDB-K2mNv",
+          "type": "AstraDB",
+          "display_name": "Internal Docs",
+          "node": {
+            "base_classes": ["Data"],
+            "template": {
+              "_type": "Component",
+              "collection_name": { "type": "str", "value": "internal_docs", "name": "collection_name" },
+              "token": { "_input_type": "SecretStrInput", "type": "str", "value": "", "name": "token" }
+            }
+          }
+        }
+      },
+      {
+        "id": "PythonREPLTool-Vc8Wd",
+        "type": "genericNode",
+        "position": { "x": 500, "y": 400 },
+        "data": {
+          "id": "PythonREPLTool-Vc8Wd",
+          "type": "PythonREPLTool",
+          "display_name": "Python Interpreter",
+          "node": {
+            "base_classes": ["Tool"],
+            "template": {
+              "_type": "Component",
+              "name": { "type": "str", "value": "python_repl", "name": "name" }
+            }
+          }
+        }
+      },
+      {
+        "id": "APIRequest-Tr4Hs",
+        "type": "genericNode",
+        "position": { "x": 700, "y": 200 },
+        "data": {
+          "id": "APIRequest-Tr4Hs",
+          "type": "APIRequest",
+          "display_name": "CRM Update",
+          "node": {
+            "base_classes": ["Data"],
+            "template": {
+              "_type": "Component",
+              "urls": { "type": "str", "value": "https://crm.example.com/api/tickets", "name": "urls" },
+              "method": { "type": "str", "value": "POST", "name": "method" }
+            }
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-Pl0Qr",
+        "type": "genericNode",
+        "position": { "x": 900, "y": 200 },
+        "data": {
+          "id": "ChatOutput-Pl0Qr",
+          "type": "ChatOutput",
+          "display_name": "Reply",
+          "node": {
+            "base_classes": ["Message"],
+            "template": { "_type": "Component" }
+          }
+        }
+      },
+      {
+        "id": "undefined-a1b2c",
+        "type": "noteNode",
+        "position": { "x": 100, "y": 50 },
+        "data": {
+          "id": "undefined-a1b2c",
+          "type": "note",
+          "node": { "template": { "_type": "note", "backgroundColor": { "type": "str", "value": "blue" } } }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "source": "ChatInput-b6UCc",
+        "target": "Prompt-9xQz1",
+        "data": {
+          "sourceHandle": { "dataType": "ChatInput", "id": "ChatInput-b6UCc", "name": "message", "output_types": ["Message"] },
+          "targetHandle": { "fieldName": "question", "id": "Prompt-9xQz1", "inputTypes": ["Message"], "type": "str" }
+        }
+      },
+      {
+        "id": "e2",
+        "source": "AstraDB-K2mNv",
+        "target": "Prompt-9xQz1",
+        "data": {
+          "sourceHandle": { "dataType": "AstraDB", "id": "AstraDB-K2mNv", "name": "search_results", "output_types": ["Data"] },
+          "targetHandle": { "fieldName": "context", "id": "Prompt-9xQz1", "inputTypes": ["Data"], "type": "str" }
+        }
+      },
+      {
+        "id": "e3",
+        "source": "Prompt-9xQz1",
+        "target": "Agent-Ff3Lp",
+        "data": {
+          "sourceHandle": { "dataType": "Prompt", "id": "Prompt-9xQz1", "name": "prompt", "output_types": ["Message"] },
+          "targetHandle": { "fieldName": "input_value", "id": "Agent-Ff3Lp", "inputTypes": ["Message"], "type": "str" }
+        }
+      },
+      {
+        "id": "e4",
+        "source": "PythonREPLTool-Vc8Wd",
+        "target": "Agent-Ff3Lp",
+        "data": {
+          "sourceHandle": { "dataType": "PythonREPLTool", "id": "PythonREPLTool-Vc8Wd", "name": "api_build_tool", "output_types": ["Tool"] },
+          "targetHandle": { "fieldName": "tools", "id": "Agent-Ff3Lp", "inputTypes": ["Tool"], "type": "other" }
+        }
+      },
+      {
+        "id": "e5",
+        "source": "Agent-Ff3Lp",
+        "target": "APIRequest-Tr4Hs",
+        "data": {
+          "sourceHandle": { "dataType": "Agent", "id": "Agent-Ff3Lp", "name": "response", "output_types": ["Message"] },
+          "targetHandle": { "fieldName": "body", "id": "APIRequest-Tr4Hs", "inputTypes": ["Message"], "type": "str" }
+        }
+      },
+      {
+        "id": "e6",
+        "source": "Agent-Ff3Lp",
+        "target": "ChatOutput-Pl0Qr",
+        "data": {
+          "sourceHandle": { "dataType": "Agent", "id": "Agent-Ff3Lp", "name": "response", "output_types": ["Message"] },
+          "targetHandle": { "fieldName": "input_value", "id": "ChatOutput-Pl0Qr", "inputTypes": ["Message"], "type": "str" }
+        }
+      },
+      {
+        "id": "e7",
+        "source": "undefined-a1b2c",
+        "target": "ChatInput-b6UCc",
+        "data": {}
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 1 }
+  }
+}
