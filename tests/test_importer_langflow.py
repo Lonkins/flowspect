@@ -95,3 +95,12 @@ def test_real_export_shape_minimal() -> None:
     # tiniest structurally-valid export: no nodes, no edges
     g = LangflowImporter().load({"name": "empty", "data": {"nodes": [], "edges": []}})
     assert g.nodes == ()
+
+
+def test_tool_binding_edges_marked(graph: Graph) -> None:
+    from flowspect.ir import EdgeKind
+
+    tool_edge = next(e for e in graph.edges if e.source == "PythonREPLTool-Vc8Wd")
+    assert tool_edge.kind is EdgeKind.TOOL
+    data_edge = next(e for e in graph.edges if e.source == "ChatInput-b6UCc")
+    assert data_edge.kind is EdgeKind.DATA

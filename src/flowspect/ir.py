@@ -75,6 +75,21 @@ class Node(BaseModel):
         return self.label or self.type
 
 
+class EdgeKind(StrEnum):
+    """How data moves along an edge.
+
+    DATA: ordinary forward data flow (source's output feeds target's input).
+    TOOL: a tool *binding* — source is a tool attached to an agent (target).
+    Tool results flow forward, but the agent also controls the tool's
+    arguments, so taint reaching the agent flows *backwards* into the tool.
+    Every builder draws this edge tool→agent; the engine must treat it as
+    bidirectional or it misses prompt-injection→execution entirely.
+    """
+
+    DATA = "data"
+    TOOL = "tool"
+
+
 class Edge(BaseModel):
     """A directed data-flow connection between two nodes."""
 
@@ -84,6 +99,7 @@ class Edge(BaseModel):
     target: str
     source_port: str | None = None
     target_port: str | None = None
+    kind: EdgeKind = EdgeKind.DATA
 
 
 class Graph(BaseModel):

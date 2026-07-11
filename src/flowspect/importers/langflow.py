@@ -12,7 +12,7 @@ from pathlib import Path
 from pydantic import JsonValue
 
 from flowspect.importers.base import FlowParseError, as_dict, as_list, as_str
-from flowspect.ir import Capability, Edge, Graph, Node
+from flowspect.ir import Capability, Edge, EdgeKind, Graph, Node
 
 # Exact component-type → capabilities. Unknown types get no tags and act as
 # taint pass-throughs, so omissions make flowspect quieter, never wrong-er.
@@ -170,6 +170,7 @@ class LangflowImporter:
             handles = raw.get("data") if isinstance(raw.get("data"), dict) else {}
             source_port: str | None = None
             target_port: str | None = None
+            kind = EdgeKind.DATA
             if isinstance(handles, dict):
                 sh = handles.get("sourceHandle")
                 th = handles.get("targetHandle")
@@ -177,8 +178,19 @@ class LangflowImporter:
                     source_port = as_str(sh.get("name")) or None
                 if isinstance(th, dict):
                     target_port = as_str(th.get("fieldName")) or None
+                    input_types = th.get("inputTypes")
+                    if target_port == "tools" or (
+                        isinstance(input_types, list) and "Tool" in input_types
+                    ):
+                        kind = EdgeKind.TOOL
             edges.append(
-                Edge(source=source, target=target, source_port=source_port, target_port=target_port)
+                Edge(
+                    source=source,
+                    target=target,
+                    source_port=source_port,
+                    target_port=target_port,
+                    kind=kind,
+                )
             )
 
         return Graph(
