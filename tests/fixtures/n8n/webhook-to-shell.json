@@ -1,0 +1,49 @@
+{
+  "name": "Deploy Webhook",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "deploy",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "id": "a1"
+    },
+    {
+      "parameters": {
+        "command": "=deploy.sh {{ $json[\"body\"][\"branch\"] }}"
+      },
+      "name": "Run Deploy",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "id": "a2"
+    },
+    {
+      "parameters": {
+        "url": "https://hooks.slack.com/services/T000/B000/xxxx",
+        "method": "POST"
+      },
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 300],
+      "id": "a3"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Run Deploy", "type": "main", "index": 0 }]]
+    },
+    "Run Deploy": {
+      "main": [[{ "node": "Notify Slack", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {},
+  "meta": {}
+}

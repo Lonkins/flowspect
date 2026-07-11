@@ -1,0 +1,95 @@
+{
+  "description": "Conversational agent with web search + code tool (test fixture, schema-faithful to Flowise exports).",
+  "usecases": ["Agent"],
+  "framework": ["Langchain"],
+  "nodes": [
+    {
+      "id": "chatOpenAI_0",
+      "position": { "x": 100, "y": 100 },
+      "type": "customNode",
+      "data": {
+        "id": "chatOpenAI_0",
+        "label": "ChatOpenAI",
+        "name": "chatOpenAI",
+        "type": "ChatOpenAI",
+        "category": "Chat Models",
+        "inputAnchors": [],
+        "inputs": { "modelName": "gpt-4o", "temperature": 0.7, "credential": "cred-abc123" },
+        "outputAnchors": [
+          { "id": "chatOpenAI_0-output-chatOpenAI-ChatOpenAI|BaseChatModel", "name": "chatOpenAI" }
+        ]
+      }
+    },
+    {
+      "id": "serpAPI_0",
+      "position": { "x": 100, "y": 300 },
+      "type": "customNode",
+      "data": {
+        "id": "serpAPI_0",
+        "label": "Serp API",
+        "name": "serpAPI",
+        "type": "SerpAPI",
+        "category": "Tools",
+        "inputAnchors": [],
+        "inputs": {},
+        "outputAnchors": [{ "id": "serpAPI_0-output-serpAPI-Tool", "name": "serpAPI" }]
+      }
+    },
+    {
+      "id": "customFunction_0",
+      "position": { "x": 100, "y": 500 },
+      "type": "customNode",
+      "data": {
+        "id": "customFunction_0",
+        "label": "Custom JS Function",
+        "name": "customFunction",
+        "type": "CustomFunction",
+        "category": "Tools",
+        "inputAnchors": [],
+        "inputs": { "javascriptFunction": "return eval($input);" },
+        "outputAnchors": [{ "id": "customFunction_0-output-customFunction-Tool", "name": "customFunction" }]
+      }
+    },
+    {
+      "id": "toolAgent_0",
+      "position": { "x": 500, "y": 300 },
+      "type": "customNode",
+      "data": {
+        "id": "toolAgent_0",
+        "label": "Tool Agent",
+        "name": "toolAgent",
+        "type": "AgentExecutor",
+        "category": "Agents",
+        "inputAnchors": [
+          { "id": "toolAgent_0-input-tools-Tool", "name": "tools" },
+          { "id": "toolAgent_0-input-model-BaseChatModel", "name": "model" }
+        ],
+        "inputs": { "systemMessage": "You are a helpful assistant." },
+        "outputAnchors": [{ "id": "toolAgent_0-output-toolAgent-AgentExecutor", "name": "toolAgent" }]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "source": "chatOpenAI_0",
+      "sourceHandle": "chatOpenAI_0-output-chatOpenAI-ChatOpenAI|BaseChatModel",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-model-BaseChatModel",
+      "id": "chatOpenAI_0-toolAgent_0"
+    },
+    {
+      "source": "serpAPI_0",
+      "sourceHandle": "serpAPI_0-output-serpAPI-Tool",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-tools-Tool",
+      "id": "serpAPI_0-toolAgent_0"
+    },
+    {
+      "source": "customFunction_0",
+      "sourceHandle": "customFunction_0-output-customFunction-Tool",
+      "target": "toolAgent_0",
+      "targetHandle": "toolAgent_0-input-tools-Tool",
+      "id": "customFunction_0-toolAgent_0"
+    }
+  ]
+}
