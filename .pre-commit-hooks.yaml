@@ -1,0 +1,7 @@
+- id: flowspect
+  name: flowspect
+  description: Scan agent-builder flow exports for insecure data flows.
+  entry: flowspect scan --skip-unrecognized
+  language: python
+  files: \.(json|ya?ml)$
+  pass_filenames: true

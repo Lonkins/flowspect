@@ -1,0 +1,22 @@
+# Example consumer workflow. Copy into .github/workflows/ in your own repo that
+# stores agent-builder flow exports. Findings appear in the Security tab.
+name: flowspect
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+  security-events: write   # required to upload SARIF to code scanning
+
+jobs:
+  flowspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: Lonkins/flowspect@v1
+        with:
+          paths: flows/          # directory holding your exported flows
+          fail-on: high          # fail the job on high+ findings
