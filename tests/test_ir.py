@@ -101,3 +101,10 @@ def test_capability_values_are_stable_strings() -> None:
     # rule YAML references these by value; renames are breaking changes
     assert Capability("untrusted_input") is Capability.UNTRUSTED_INPUT
     assert Capability.CODE_EXECUTION.value == "code_execution"
+
+
+def test_edge_kind_defaults_to_data() -> None:
+    from flowspect.ir import EdgeKind
+
+    assert Edge(source="a", target="b").kind is EdgeKind.DATA
+    assert Edge(source="a", target="b", kind=EdgeKind.TOOL).kind is EdgeKind.TOOL
