@@ -1,0 +1,65 @@
+# Structural (node-config) rules — the finding is a property of a node, not a flow.
+rules:
+  - id: FS-WEBHOOK-UNAUTH-001
+    kind: structural
+    severity: high
+    title: Unauthenticated trigger performs state change
+    description: >
+      A node that both receives untrusted input and performs a state-changing
+      action (e.g. an n8n webhook wired to a mutation) carries no authentication
+      capability — anyone who can reach the endpoint can trigger the action.
+    remediation: >
+      Require authentication on the trigger (header auth, HMAC signature, or a
+      gateway) before it performs any state change.
+    match: { all_capabilities: [untrusted_input, state_change] }
+    require: { capability: authentication }
+
+  - id: FS-HARDCODED-SECRET-001
+    kind: structural
+    severity: medium
+    title: Hardcoded secret in flow export
+    description: >
+      A node carries an inline credential embedded in the export file. Secrets in
+      an exported flow leak wherever the file travels (git, sharing, backups).
+    remediation: >
+      Move the credential to an environment variable or the builder's secret store
+      and re-export. Rotate any secret already committed.
+    references:
+      - https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_password
+    match: { capability: secrets }
+
+  - id: FS-OVERBROAD-CODE-TOOL-001
+    kind: structural
+    severity: medium
+    title: Unrestricted code-execution tool
+    description: >
+      A code/shell execution component is present. An agent tool that runs
+      arbitrary code is the broadest possible scope and turns any upstream injection
+      into execution.
+    remediation: >
+      Replace with a purpose-built tool exposing only the operations needed, or
+      sandbox the executor and restrict its capabilities.
+    match: { capability: code_execution }
+
+  - id: FS-OVERBROAD-SQL-TOOL-001
+    kind: structural
+    severity: low
+    title: Direct SQL-execution tool
+    description: >
+      A node executes SQL directly. Direct database access is a broad scope; prefer
+      narrow, parameterised operations.
+    remediation: >
+      Expose specific queries or stored procedures instead of arbitrary SQL, and use
+      a least-privilege database role.
+    match: { capability: sql_execution }
+
+  - id: FS-DESERIALIZE-NODE-001
+    kind: structural
+    severity: medium
+    title: Unsafe deserialization component present
+    description: >
+      A node performs unsafe deserialization (pickle/eval-style). These components
+      are dangerous even before considering data flow.
+    remediation: >
+      Remove the component or replace it with a safe, schema-validated parser.
+    match: { capability: deserialization }

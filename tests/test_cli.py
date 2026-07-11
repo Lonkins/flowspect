@@ -27,7 +27,9 @@ def test_scan_json_output() -> None:
     result = runner.invoke(app, ["scan", str(SUPPORT_AGENT), "-f", "json"])
     assert result.exit_code == 1
     payload = json.loads(result.stdout)
-    assert payload["summary"]["findings"] == 2
+    assert payload["summary"]["by_severity"]["critical"] == 2
+    rule_ids = {f["rule_id"] for f in payload["findings"]}
+    assert {"FS-TRIFECTA-001", "FS-INJECT-EXEC-001"} <= rule_ids
 
 
 def test_scan_sarif_output() -> None:
@@ -47,7 +49,7 @@ def test_scan_output_to_file(tmp_path: Path) -> None:
     out = tmp_path / "report.json"
     result = runner.invoke(app, ["scan", str(SUPPORT_AGENT), "-f", "json", "-o", str(out)])
     assert result.exit_code == 1
-    assert json.loads(out.read_text())["summary"]["findings"] == 2
+    assert json.loads(out.read_text())["summary"]["by_severity"]["critical"] == 2
 
 
 def test_scan_clean_flow_exits_zero(tmp_path: Path) -> None:

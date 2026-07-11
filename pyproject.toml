@@ -79,7 +79,10 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101"]  # assert is the point of tests
+"tests/**" = [
+    "S101",  # assert is the point of tests
+    "N817",  # short acronym aliases (e.g. Capability as C) keep fixture tables readable
+]
 
 [tool.mypy]
 python_version = "3.12"

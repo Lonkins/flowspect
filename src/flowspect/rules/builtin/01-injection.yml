@@ -1,0 +1,78 @@
+# Prompt-injection / untrusted-input to dangerous execution sinks.
+rules:
+  - id: FS-INJECT-EXEC-001
+    kind: taint
+    severity: critical
+    title: Prompt injection to code execution
+    description: >
+      Untrusted input flows into a node that executes code or shell commands with
+      no validation in between. A crafted payload or prompt injection can be turned
+      into arbitrary execution.
+    remediation: >
+      Never let untrusted text reach a code/shell node directly. Constrain the tool
+      to a fixed command set, validate arguments against an allowlist, or insert an
+      output-validation guard before execution.
+    references:
+      - https://owasp.org/www-project-top-10-for-large-language-model-applications/
+    source: { capability: untrusted_input }
+    sink: { capability: code_execution }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-INJECT-SQL-001
+    kind: taint
+    severity: critical
+    title: Prompt injection to SQL execution
+    description: >
+      Untrusted input reaches a node that runs SQL against a live database.
+      Attacker-controlled text can drive injection or destructive queries.
+    remediation: >
+      Use parameterised queries, restrict the database role to read-only where
+      possible, and validate the model/tool output before it becomes SQL.
+    references:
+      - https://owasp.org/www-community/attacks/SQL_Injection
+    source: { capability: untrusted_input }
+    sink: { capability: sql_execution }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-INJECT-DESERIALIZE-001
+    kind: taint
+    severity: critical
+    title: Untrusted input to unsafe deserialization
+    description: >
+      Untrusted input reaches a node that deserializes data (pickle/eval-style).
+      Unsafe deserialization of attacker-controlled bytes is remote code execution.
+    remediation: >
+      Deserialize only trusted data, use a safe format (JSON with a schema), and
+      never unpickle or eval attacker-influenced content.
+    references:
+      - https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data
+    source: { capability: untrusted_input }
+    sink: { capability: deserialization }
+
+  - id: FS-INJECT-FILEWRITE-001
+    kind: taint
+    severity: high
+    title: Untrusted input to file write
+    description: >
+      Untrusted input reaches a node that writes files. Attacker-controlled paths
+      or contents enable overwrite, path traversal, or planting executable content.
+    remediation: >
+      Constrain the write path to a fixed directory, sanitise filenames, and never
+      let untrusted text choose the destination path.
+    source: { capability: untrusted_input }
+    sink: { capability: file_write }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-INJECT-STATECHANGE-001
+    kind: taint
+    severity: high
+    title: Untrusted input to state-changing action
+    description: >
+      Untrusted input reaches a node that performs a state-changing side effect
+      (CRUD call, DB write, external mutation) without validation.
+    remediation: >
+      Validate and authorise the action before it fires; require confirmation for
+      destructive operations driven by untrusted input.
+    source: { capability: untrusted_input }
+    sink: { capability: state_change }
+    sanitizer: { capability: input_validation }

@@ -1,0 +1,86 @@
+# Additional data-flow rules covering the remaining common insecure patterns.
+rules:
+  - id: FS-UNTRUSTED-MESSAGING-001
+    kind: taint
+    severity: medium
+    title: Untrusted input relayed to messaging sink
+    description: >
+      Untrusted input flows to a messaging sink (email, chat, webhook). Without
+      validation this enables spam, phishing relay, or social-engineering through
+      the flow's trusted identity.
+    remediation: >
+      Validate and rate-limit messages derived from untrusted input; do not let
+      arbitrary content be sent under the flow's identity.
+    source: { capability: untrusted_input }
+    sink: { capability: messaging }
+    sanitizer: { capability: input_validation }
+
+  - id: FS-UNTRUSTED-HTTP-001
+    kind: taint
+    severity: medium
+    title: Untrusted input to outbound HTTP body
+    description: >
+      Untrusted input reaches an outbound HTTP request. Beyond SSRF, this lets an
+      attacker shape requests the flow makes to third-party services.
+    remediation: >
+      Validate and constrain the request; never forward raw untrusted input into an
+      outbound call.
+    source: { capability: untrusted_input }
+    sink: { capability: outbound_http }
+    sanitizer: { capability: input_validation }
+
+  - id: FS-FILEREAD-EXFIL-001
+    kind: taint
+    severity: medium
+    title: Local file contents to external sink
+    description: >
+      Content read from the local filesystem flows to an outbound HTTP or messaging
+      sink — a local-file exfiltration path.
+    remediation: >
+      Confirm the file is meant to leave the environment and redact sensitive
+      portions before any external sink.
+    source: { capability: file_read }
+    sink: { any_capabilities: [outbound_http, messaging] }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-WEBFETCH-STATECHANGE-001
+    kind: taint
+    severity: medium
+    title: Fetched content drives a state change
+    description: >
+      Web-fetched (untrusted) content reaches a state-changing action, letting an
+      attacker-controlled page influence a mutation.
+    remediation: >
+      Validate fetched content before it drives any side effect; require confirmation
+      for destructive actions.
+    source: { capability: web_fetch }
+    sink: { capability: state_change }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-SUBFLOW-UNTRUSTED-001
+    kind: taint
+    severity: low
+    title: Untrusted input crosses into a sub-flow
+    description: >
+      Untrusted input flows into a sub-flow/opaque workflow reference. flowspect
+      cannot see inside the sub-flow, so any sink it contains is unanalysed —
+      review the callee for the trifecta and injection sinks.
+    remediation: >
+      Audit the referenced sub-flow with flowspect as well; validate inputs at the
+      boundary before delegating.
+    source: { capability: untrusted_input }
+    sink: { capability: subflow }
+    sanitizer: { capability: input_validation }
+
+  - id: FS-SENSITIVE-SUBFLOW-001
+    kind: taint
+    severity: low
+    title: Sensitive data crosses into a sub-flow
+    description: >
+      Private/sensitive data flows into a sub-flow whose downstream sinks flowspect
+      cannot see. The data may be exfiltrated inside the callee.
+    remediation: >
+      Review the referenced sub-flow for egress sinks; pass only the minimum data
+      across the boundary.
+    source: { capability: sensitive_data }
+    sink: { capability: subflow }
