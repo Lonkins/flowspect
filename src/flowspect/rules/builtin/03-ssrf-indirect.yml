@@ -1,0 +1,78 @@
+# SSRF and second-order (indirect) prompt injection via fetched content.
+rules:
+  - id: FS-SSRF-001
+    kind: taint
+    severity: high
+    title: SSRF via user-controlled fetch URL
+    description: >
+      Untrusted input flows into a fetch/HTTP node whose URL it can influence,
+      enabling server-side request forgery against internal services or metadata
+      endpoints.
+    remediation: >
+      Allowlist destination hosts, forbid internal/link-local ranges, and never let
+      untrusted text set the request URL directly.
+    references:
+      - https://owasp.org/www-community/attacks/Server_Side_Request_Forgery
+    source: { capability: untrusted_input }
+    sink: { capability: web_fetch }
+    sanitizer: { capability: input_validation }
+
+  - id: FS-INDIRECT-EXEC-001
+    kind: taint
+    severity: high
+    title: Fetched content to code execution
+    description: >
+      Content pulled from the web (inherently untrusted) reaches a code/shell
+      execution node — a second-order (indirect) prompt-injection path where the
+      attacker controls a page the flow fetches.
+    remediation: >
+      Treat fetched content as untrusted. Do not let it drive code execution;
+      validate or constrain the executor.
+    references:
+      - https://simonwillison.net/tags/prompt-injection/
+    source: { capability: web_fetch }
+    sink: { capability: code_execution }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-INDIRECT-SQL-001
+    kind: taint
+    severity: high
+    title: Fetched content to SQL execution
+    description: >
+      Web-fetched content reaches a SQL execution node, an indirect-injection path
+      into the database.
+    remediation: >
+      Parameterise queries and validate fetched content before it influences SQL.
+    source: { capability: web_fetch }
+    sink: { capability: sql_execution }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-INDIRECT-TRIFECTA-001
+    kind: taint
+    severity: high
+    title: Fetched content + private data + exfiltration
+    description: >
+      Web-fetched (untrusted) content reaches an exfiltration sink that is also
+      reachable from private data — the lethal trifecta driven by indirect injection
+      rather than direct user input.
+    remediation: >
+      Break the path: gate the exfil sink on validated output or remove the private
+      data from a flow that also ingests web content.
+    source: { capability: web_fetch }
+    sink: { any_capabilities: [outbound_http, messaging] }
+    also_reachable_from: { capability: sensitive_data }
+
+  - id: FS-TOOLRESULT-NOVALIDATE-001
+    kind: taint
+    severity: medium
+    title: Unvalidated tool result reaches a sink
+    description: >
+      A tool result from a web-fetch node reaches a messaging, outbound-HTTP, or
+      state-changing sink with no output-validation guard on the path — missing
+      validation of tool output.
+    remediation: >
+      Add an output-validation/guardrail node between tool results and any sink that
+      acts on them.
+    source: { capability: web_fetch }
+    sink: { any_capabilities: [messaging, outbound_http, state_change] }
+    sanitizer: { capability: output_validation }

@@ -80,11 +80,14 @@ def _analyze_structural(rule: Rule, graph: Graph) -> list[Finding]:
     if rule.match is None:  # schema guarantees this; guard for the type checker
         return []
     findings: list[Finding] = []
+    flag_all = rule.require is None and rule.forbid is None
     for node in graph.nodes:
         if not rule.match.matches(node):
             continue
-        violated = (rule.require is not None and not rule.require.matches(node)) or (
-            rule.forbid is not None and rule.forbid.matches(node)
+        violated = (
+            flag_all
+            or (rule.require is not None and not rule.require.matches(node))
+            or (rule.forbid is not None and rule.forbid.matches(node))
         )
         if violated:
             findings.append(_make_finding(rule, graph, path=(node.id,)))

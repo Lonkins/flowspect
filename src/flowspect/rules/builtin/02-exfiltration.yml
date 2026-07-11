@@ -1,0 +1,88 @@
+# Data leaving the flow: the lethal trifecta plus secret/sensitive egress.
+rules:
+  - id: FS-TRIFECTA-001
+    kind: taint
+    severity: critical
+    title: Lethal trifecta (untrusted input + private data + exfiltration)
+    description: >
+      Untrusted input reaches a sink that can send data outside the flow, and that
+      same sink is also reachable from private/sensitive data. An attacker who
+      controls the input can steer the flow into exfiltrating the private data —
+      the classic "lethal trifecta" of agent security.
+    remediation: >
+      Break one leg of the trifecta: gate the exfiltration sink behind validated
+      output, remove the private-data source from this path, or require human
+      approval before the outbound action.
+    references:
+      - https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/
+    source: { capability: untrusted_input }
+    sink: { any_capabilities: [outbound_http, messaging] }
+    also_reachable_from: { capability: sensitive_data }
+
+  - id: FS-SECRET-HTTP-001
+    kind: taint
+    severity: high
+    title: Credential to outbound HTTP
+    description: >
+      A node holding secrets/credentials flows into an outbound HTTP request,
+      risking credential leakage to an external endpoint.
+    remediation: >
+      Do not route credential-bearing values into request bodies or query strings.
+      Reference secrets only inside the authenticated node that needs them.
+    source: { capability: secrets }
+    sink: { capability: outbound_http }
+
+  - id: FS-SECRET-MESSAGING-001
+    kind: taint
+    severity: high
+    title: Credential to messaging sink
+    description: >
+      A node holding secrets/credentials flows into a messaging sink (email, chat,
+      webhook), risking credential disclosure to a channel.
+    remediation: >
+      Never forward credentials into message contents. Redact secrets before any
+      messaging node.
+    source: { capability: secrets }
+    sink: { capability: messaging }
+
+  - id: FS-SENSITIVE-HTTP-001
+    kind: taint
+    severity: medium
+    title: Sensitive data to outbound HTTP
+    description: >
+      Private/sensitive data (vector store, DB read, internal files) flows to an
+      outbound HTTP request. Even without untrusted input this is a data-egress path.
+    remediation: >
+      Confirm the destination is trusted and the data is meant to leave. Add an
+      output-validation/redaction step before the request.
+    source: { capability: sensitive_data }
+    sink: { capability: outbound_http }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-SENSITIVE-MESSAGING-001
+    kind: taint
+    severity: medium
+    title: Sensitive data to messaging sink
+    description: >
+      Private/sensitive data flows to a messaging sink (email, chat), a common
+      accidental-disclosure path.
+    remediation: >
+      Verify the recipient channel is authorised for this data and redact fields
+      that should not be shared.
+    source: { capability: sensitive_data }
+    sink: { capability: messaging }
+    sanitizer: { capability: output_validation }
+
+  - id: FS-MEMORY-EXFIL-001
+    kind: taint
+    severity: medium
+    title: Conversation memory to external sink
+    description: >
+      Conversation/long-term memory (which can accumulate prior sensitive context)
+      flows to an outbound HTTP or messaging sink.
+    remediation: >
+      Do not forward raw memory to external sinks; select and redact the specific
+      fields required.
+    source: { capability: memory }
+    sink: { any_capabilities: [outbound_http, messaging] }
+    sanitizer: { capability: output_validation }

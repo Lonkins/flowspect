@@ -11,7 +11,8 @@ Two rule kinds:
 
 * **structural** — a per-node predicate. ``match`` selects candidate nodes;
   each must satisfy ``require`` (else it's a finding) or must *not* match
-  ``forbid`` (else it's a finding).
+  ``forbid`` (else it's a finding). With neither, every matched node is a
+  finding — for "the mere presence of this component is the problem" rules.
 
 A ``NodeMatcher`` is an AND of whatever constraints are set. Every field is
 optional; an empty matcher matches nothing (guarded at load time).
@@ -137,9 +138,9 @@ class Rule(BaseModel):
         else:  # structural
             if self.match is None:
                 raise ValueError(f"structural rule {self.id!r} requires 'match'")
-            if (self.require is None) == (self.forbid is None):
+            if self.require is not None and self.forbid is not None:
                 raise ValueError(
-                    f"structural rule {self.id!r} requires exactly one of 'require' or 'forbid'"
+                    f"structural rule {self.id!r} sets both 'require' and 'forbid'; use at most one"
                 )
             _reject(
                 self.id,

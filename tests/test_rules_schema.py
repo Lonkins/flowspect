@@ -71,16 +71,33 @@ def test_taint_rule_needs_source_and_sink() -> None:
         )
 
 
-def test_structural_rule_needs_match_and_one_assertion() -> None:
+def test_structural_rule_needs_match() -> None:
     with pytest.raises(ValidationError, match="requires 'match'"):
         Rule(id="X-2", kind="structural", severity=Severity.LOW, title="t")
-    with pytest.raises(ValidationError, match="exactly one of 'require' or 'forbid'"):
+
+
+def test_structural_match_only_is_flag_all() -> None:
+    # neither require nor forbid: every matched node is a finding
+    rule = Rule(
+        id="X-3",
+        kind="structural",
+        severity=Severity.LOW,
+        title="t",
+        match=NodeMatcher(capability=Capability.UNTRUSTED_INPUT),
+    )
+    assert rule.require is None and rule.forbid is None
+
+
+def test_structural_rule_rejects_both_require_and_forbid() -> None:
+    with pytest.raises(ValidationError, match="use at most one"):
         Rule(
-            id="X-3",
+            id="X-3B",
             kind="structural",
             severity=Severity.LOW,
             title="t",
             match=NodeMatcher(capability=Capability.UNTRUSTED_INPUT),
+            require=NodeMatcher(capability=Capability.AUTHENTICATION),
+            forbid=NodeMatcher(capability=Capability.SECRETS),
         )
 
 

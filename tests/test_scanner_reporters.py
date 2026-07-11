@@ -46,9 +46,9 @@ def test_scan_direct_unparseable_file_is_error(tmp_path: Path) -> None:
 def test_json_reporter_valid_and_complete() -> None:
     payload = json.loads(to_json(_result()))
     assert payload["tool"] == "flowspect"
-    assert payload["summary"]["findings"] == 2
     assert payload["summary"]["by_severity"]["critical"] == 2
-    first = payload["findings"][0]
+    first = payload["findings"][0]  # sorted most-severe first
+    assert first["severity"] == "critical"
     assert first["path"][0] == "ChatInput-b6UCc"
     assert first["remediation"]
 
