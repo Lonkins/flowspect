@@ -53,6 +53,11 @@ _FAMILY_CAPS: tuple[tuple[str, frozenset[Capability]], ...] = (
     ("discord", frozenset({Capability.MESSAGING})),
     ("telegram", frozenset({Capability.MESSAGING})),
     ("twilio", frozenset({Capability.MESSAGING})),
+    # validation / guardrail components act as sanitizers
+    ("structuredoutput", frozenset({Capability.OUTPUT_VALIDATION})),
+    ("guard", frozenset({Capability.OUTPUT_VALIDATION})),
+    ("validat", frozenset({Capability.OUTPUT_VALIDATION})),
+    ("moderat", frozenset({Capability.INPUT_VALIDATION})),
 )
 
 _VECTOR_STORES = (

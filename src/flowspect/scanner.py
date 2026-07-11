@@ -46,12 +46,17 @@ def _iter_flow_files(path: Path) -> list[Path]:
     return []
 
 
-def scan_paths(paths: Iterable[Path], rules: Iterable[Rule]) -> ScanResult:
+def scan_paths(
+    paths: Iterable[Path], rules: Iterable[Rule], *, skip_unrecognized: bool = False
+) -> ScanResult:
     """Import every flow file under the given paths and run the rules over each.
 
     A direct file that fails to parse is a reported error; a file discovered under
     a directory that is not a recognisable flow export is silently skipped (dirs
-    routinely mix flow exports with unrelated JSON/YAML).
+    routinely mix flow exports with unrelated JSON/YAML). With ``skip_unrecognized``
+    a directly-named file that no importer recognises is skipped too rather than
+    reported — the mode the pre-commit hook uses, since it is handed every changed
+    JSON/YAML file regardless of whether it is a flow export.
     """
     rule_list = list(rules)
     findings: list[Finding] = []
@@ -65,7 +70,8 @@ def scan_paths(paths: Iterable[Path], rules: Iterable[Rule]) -> ScanResult:
             errors.append(ScanError(path=str(root), message="path does not exist"))
             continue
         for file in _iter_flow_files(root):
-            graph = _try_import(file, direct=is_direct_file, errors=errors)
+            report_errors = is_direct_file and not skip_unrecognized
+            graph = _try_import(file, direct=report_errors, errors=errors)
             if graph is None:
                 continue
             scanned.append(str(file))

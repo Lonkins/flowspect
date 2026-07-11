@@ -75,6 +75,14 @@ def scan(
         Path | None,
         typer.Option("--output", "-o", help="Write report to a file instead of stdout."),
     ] = None,
+    skip_unrecognized: Annotated[
+        bool,
+        typer.Option(
+            "--skip-unrecognized",
+            "-s",
+            help="Skip named files no importer recognises instead of erroring (for hooks).",
+        ),
+    ] = False,
 ) -> None:
     """Scan flow exports for insecure data flows."""
     console = Console()
@@ -89,7 +97,7 @@ def scan(
     if not rules:
         err_console.print("[yellow]No rules loaded (use --rules or drop --no-builtin).[/yellow]")
 
-    result = scan_paths(paths, rules)
+    result = scan_paths(paths, rules, skip_unrecognized=skip_unrecognized)
 
     if output_format is OutputFormat.JSON:
         _emit(to_json(result), output, console)

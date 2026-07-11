@@ -1,0 +1,85 @@
+{
+  "id": "e2000000-0000-4000-8000-00000000s001",
+  "name": "Customer Support Agent (safe)",
+  "description": "The same customer-support flow, secured: no code-execution tool, the outbound CRM call is gated by an output validator, and the private HR docs never converge with an exfiltration sink. flowspect reports no findings.",
+  "is_component": false,
+  "last_tested_version": "1.4.2",
+  "tags": ["example", "secure"],
+  "data": {
+    "nodes": [
+      {
+        "id": "ChatInput-intake",
+        "type": "genericNode",
+        "position": { "x": 80, "y": 240 },
+        "data": {
+          "id": "ChatInput-intake",
+          "type": "ChatInput",
+          "display_name": "Customer Chat",
+          "node": { "base_classes": ["Message"], "template": { "_type": "Component", "input_value": { "type": "str", "value": "", "name": "input_value" } } }
+        }
+      },
+      {
+        "id": "Prompt-compose",
+        "type": "genericNode",
+        "position": { "x": 320, "y": 240 },
+        "data": {
+          "id": "Prompt-compose",
+          "type": "Prompt",
+          "display_name": "Compose Prompt",
+          "node": { "base_classes": ["Message"], "template": { "_type": "Component", "template": { "type": "prompt", "value": "Use {context} to answer: {question}", "name": "template" } } }
+        }
+      },
+      {
+        "id": "Chroma-faq",
+        "type": "genericNode",
+        "position": { "x": 320, "y": 440 },
+        "data": {
+          "id": "Chroma-faq",
+          "type": "ChromaDB",
+          "display_name": "Public FAQ",
+          "node": { "base_classes": ["Data"], "template": { "_type": "Component", "collection_name": { "type": "str", "value": "public_faq", "name": "collection_name" } } }
+        }
+      },
+      {
+        "id": "Agent-support",
+        "type": "genericNode",
+        "position": { "x": 560, "y": 240 },
+        "data": {
+          "id": "Agent-support",
+          "type": "Agent",
+          "display_name": "Support Agent",
+          "node": { "base_classes": ["Message"], "template": { "_type": "Component", "system_prompt": { "type": "str", "value": "You are a support agent. Answer only from the FAQ.", "name": "system_prompt" } } }
+        }
+      },
+      {
+        "id": "StructuredOutput-guard",
+        "type": "genericNode",
+        "position": { "x": 800, "y": 240 },
+        "data": {
+          "id": "StructuredOutput-guard",
+          "type": "StructuredOutput",
+          "display_name": "Validate Reply",
+          "node": { "base_classes": ["Message"], "template": { "_type": "Component" } }
+        }
+      },
+      {
+        "id": "ChatOutput-reply",
+        "type": "genericNode",
+        "position": { "x": 1040, "y": 240 },
+        "data": {
+          "id": "ChatOutput-reply",
+          "type": "ChatOutput",
+          "display_name": "Reply",
+          "node": { "base_classes": ["Message"], "template": { "_type": "Component" } }
+        }
+      }
+    ],
+    "edges": [
+      { "id": "s1", "source": "ChatInput-intake", "target": "Prompt-compose", "data": { "sourceHandle": { "dataType": "ChatInput", "name": "message" }, "targetHandle": { "fieldName": "question", "inputTypes": ["Message"] } } },
+      { "id": "s2", "source": "Chroma-faq", "target": "Prompt-compose", "data": { "sourceHandle": { "dataType": "ChromaDB", "name": "search_results" }, "targetHandle": { "fieldName": "context", "inputTypes": ["Data"] } } },
+      { "id": "s3", "source": "Prompt-compose", "target": "Agent-support", "data": { "sourceHandle": { "dataType": "Prompt", "name": "prompt" }, "targetHandle": { "fieldName": "input_value", "inputTypes": ["Message"] } } },
+      { "id": "s4", "source": "Agent-support", "target": "StructuredOutput-guard", "data": { "sourceHandle": { "dataType": "Agent", "name": "response" }, "targetHandle": { "fieldName": "input_value", "inputTypes": ["Message"] } } },
+      { "id": "s5", "source": "StructuredOutput-guard", "target": "ChatOutput-reply", "data": { "sourceHandle": { "dataType": "StructuredOutput", "name": "output" }, "targetHandle": { "fieldName": "input_value", "inputTypes": ["Message"] } } }
+    ]
+  }
+}

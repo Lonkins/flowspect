@@ -1,0 +1,44 @@
+name: action-selftest
+
+# Proves the CLI/SARIF pipeline the composite action wraps, using the local
+# package (no PyPI dependency). Runs on changes to the action, examples, or CLI.
+on:
+  pull_request:
+    paths:
+      - "action.yml"
+      - "examples/**"
+      - "src/flowspect/cli.py"
+      - "src/flowspect/reporters/**"
+      - ".github/workflows/action-selftest.yml"
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --locked
+
+      - name: Vulnerable example must fail and emit SARIF
+        run: |
+          set +e
+          uv run flowspect scan examples/vulnerable-langflow \
+            --format sarif --output flowspect.sarif --fail-on high
+          code=$?
+          set -e
+          test "$code" -eq 1 || { echo "expected exit 1, got $code"; exit 1; }
+          python -c "import json,sys; d=json.load(open('flowspect.sarif')); \
+            ids={r['ruleId'] for r in d['runs'][0]['results']}; \
+            assert {'FS-TRIFECTA-001','FS-INJECT-EXEC-001'} <= ids, ids; \
+            print('SARIF OK:', sorted(ids))"
+
+      - name: Safe example must pass cleanly
+        run: uv run flowspect scan examples/safe-langflow --fail-on low
+
+      - name: Validate SARIF against the 2.1.0 schema
+        run: uvx check-jsonschema --schemafile "https://json.schemastore.org/sarif-2.1.0.json" flowspect.sarif
