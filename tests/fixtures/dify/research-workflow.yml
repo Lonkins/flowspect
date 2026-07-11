@@ -1,0 +1,133 @@
+app:
+  name: Research Assistant
+  mode: advanced-chat
+  icon: "\U0001F50D"
+  description: Answers questions using web search + internal KB, then posts to Slack.
+kind: app
+version: 0.1.5
+dependencies: []
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    opening_statement: ""
+  graph:
+    viewport:
+      x: 0
+      y: 0
+      zoom: 1
+    nodes:
+      - id: "start-1"
+        type: custom
+        position: { x: 80, y: 200 }
+        data:
+          title: Start
+          type: start
+          desc: ""
+          variables:
+            - variable: query
+              label: Question
+              type: paragraph
+              required: true
+      - id: "search-1"
+        type: custom
+        position: { x: 320, y: 120 }
+        data:
+          title: Web Search
+          type: tool
+          provider_id: tavily
+          provider_name: tavily
+          tool_name: tavily_search
+          tool_label: Tavily Search
+      - id: "kb-1"
+        type: custom
+        position: { x: 320, y: 300 }
+        data:
+          title: Internal Knowledge
+          type: knowledge-retrieval
+          desc: ""
+          dataset_ids: ["ds-internal-hr"]
+      - id: "llm-1"
+        type: custom
+        position: { x: 560, y: 200 }
+        data:
+          title: Answer LLM
+          type: llm
+          model:
+            provider: openai
+            name: gpt-4o
+      - id: "code-1"
+        type: custom
+        position: { x: 800, y: 320 }
+        data:
+          title: Post-process
+          type: code
+          code_language: python3
+          code: "def main(text: str) -> dict:\n    return {'result': text}"
+      - id: "slack-1"
+        type: custom
+        position: { x: 800, y: 120 }
+        data:
+          title: Notify Team
+          type: tool
+          provider_id: slack
+          provider_name: slack
+          tool_name: slack_webhook
+          tool_label: Slack Incoming Webhook
+      - id: "answer-1"
+        type: custom
+        position: { x: 1040, y: 200 }
+        data:
+          title: Answer
+          type: answer
+          answer: "{{#llm-1.text#}}"
+      - id: "note-1"
+        type: custom-note
+        position: { x: 80, y: 40 }
+        data:
+          title: ""
+          type: ""
+          text: "remember to test with adversarial inputs"
+    edges:
+      - id: "e1"
+        source: "start-1"
+        target: "search-1"
+        sourceHandle: source
+        targetHandle: target
+        type: custom
+      - id: "e2"
+        source: "start-1"
+        target: "kb-1"
+        sourceHandle: source
+        targetHandle: target
+        type: custom
+      - id: "e3"
+        source: "search-1"
+        target: "llm-1"
+        sourceHandle: source
+        targetHandle: target
+        type: custom
+      - id: "e4"
+        source: "kb-1"
+        target: "llm-1"
+        sourceHandle: source
+        targetHandle: target
+        type: custom
+      - id: "e5"
+        source: "llm-1"
+        target: "code-1"
+        sourceHandle: source
+        targetHandle: target
+        type: custom
+      - id: "e6"
+        source: "llm-1"
+        target: "slack-1"
+        sourceHandle: source
+        targetHandle: target
+        type: custom
+      - id: "e7"
+        source: "llm-1"
+        target: "answer-1"
+        sourceHandle: source
+        targetHandle: target
+        type: custom
