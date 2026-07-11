@@ -9,10 +9,19 @@ from flowspect.importers.base import (
     parse_file,
 )
 from flowspect.importers.dify import DifyImporter
+from flowspect.importers.flowise import FlowiseImporter
 from flowspect.importers.langflow import LangflowImporter
+from flowspect.importers.n8n import N8nImporter
 from flowspect.ir import Graph
 
-REGISTRY: tuple[Importer, ...] = (LangflowImporter(), DifyImporter())
+# Order matters: more specific detectors first. Langflow and Flowise both use
+# {nodes, edges}; Langflow nests under "data", Flowise nodes carry "category".
+REGISTRY: tuple[Importer, ...] = (
+    LangflowImporter(),
+    DifyImporter(),
+    N8nImporter(),
+    FlowiseImporter(),
+)
 
 _FLOW_SUFFIXES = {".json", ".yml", ".yaml"}
 
