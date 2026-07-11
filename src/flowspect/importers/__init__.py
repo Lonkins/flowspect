@@ -8,10 +8,11 @@ from flowspect.importers.base import (
     UnsupportedFormatError,
     parse_file,
 )
+from flowspect.importers.dify import DifyImporter
 from flowspect.importers.langflow import LangflowImporter
 from flowspect.ir import Graph
 
-REGISTRY: tuple[Importer, ...] = (LangflowImporter(),)
+REGISTRY: tuple[Importer, ...] = (LangflowImporter(), DifyImporter())
 
 _FLOW_SUFFIXES = {".json", ".yml", ".yaml"}
 
