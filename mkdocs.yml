@@ -1,0 +1,55 @@
+site_name: flowspect
+site_description: Static security analysis for visual agent-builder graphs
+site_url: https://lonkins.github.io/flowspect/
+repo_url: https://github.com/Lonkins/flowspect
+repo_name: Lonkins/flowspect
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.integrate
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: installation.md
+      - Usage: usage.md
+      - GitHub Action: github-action.md
+  - Reference:
+      - Rule catalog: rules.md
+      - Importer coverage: importers.md
+      - Graph IR: ir.md
+  - Guides:
+      - Write your own rule: writing-rules.md
+      - How the taint engine works: engine.md
+  - Design decisions:
+      - ADR-0001 Bootstrap: adr/0001-bootstrap-decisions.md
