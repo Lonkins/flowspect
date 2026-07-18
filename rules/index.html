@@ -1,0 +1,1511 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Static security analysis for visual agent-builder graphs">
+      
+      
+      
+        <link rel="canonical" href="https://lonkins.github.io/flowspect/rules/">
+      
+      
+        <link rel="prev" href="../github-action/">
+      
+      
+        <link rel="next" href="../importers/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Rule catalog - flowspect</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#rule-catalog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="flowspect" class="md-header__button md-logo" aria-label="flowspect" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            flowspect
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Rule catalog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Lonkins/flowspect" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Lonkins/flowspect
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="flowspect" class="md-nav__button md-logo" aria-label="flowspect" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    flowspect
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Lonkins/flowspect" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Lonkins/flowspect
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../github-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Action
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule catalog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule catalog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#rule-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule details
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rule details">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fs-inject-deserialize-001-untrusted-input-to-unsafe-deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INJECT-DESERIALIZE-001 — Untrusted input to unsafe deserialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-inject-exec-001-prompt-injection-to-code-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INJECT-EXEC-001 — Prompt injection to code execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-inject-sql-001-prompt-injection-to-sql-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INJECT-SQL-001 — Prompt injection to SQL execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-trifecta-001-lethal-trifecta-untrusted-input-private-data-exfiltration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-TRIFECTA-001 — Lethal trifecta (untrusted input + private data + exfiltration)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-indirect-exec-001-fetched-content-to-code-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INDIRECT-EXEC-001 — Fetched content to code execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-indirect-sql-001-fetched-content-to-sql-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INDIRECT-SQL-001 — Fetched content to SQL execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-indirect-trifecta-001-fetched-content-private-data-exfiltration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INDIRECT-TRIFECTA-001 — Fetched content + private data + exfiltration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-inject-filewrite-001-untrusted-input-to-file-write" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INJECT-FILEWRITE-001 — Untrusted input to file write
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-inject-statechange-001-untrusted-input-to-state-changing-action" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-INJECT-STATECHANGE-001 — Untrusted input to state-changing action
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-secret-http-001-credential-to-outbound-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-SECRET-HTTP-001 — Credential to outbound HTTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-secret-messaging-001-credential-to-messaging-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-SECRET-MESSAGING-001 — Credential to messaging sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-ssrf-001-ssrf-via-user-controlled-fetch-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-SSRF-001 — SSRF via user-controlled fetch URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-webhook-unauth-001-unauthenticated-trigger-performs-state-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-WEBHOOK-UNAUTH-001 — Unauthenticated trigger performs state change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-deserialize-node-001-unsafe-deserialization-component-present" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-DESERIALIZE-NODE-001 — Unsafe deserialization component present
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-fileread-exfil-001-local-file-contents-to-external-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-FILEREAD-EXFIL-001 — Local file contents to external sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-hardcoded-secret-001-hardcoded-secret-in-flow-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-HARDCODED-SECRET-001 — Hardcoded secret in flow export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-memory-exfil-001-conversation-memory-to-external-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-MEMORY-EXFIL-001 — Conversation memory to external sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-overbroad-code-tool-001-unrestricted-code-execution-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-OVERBROAD-CODE-TOOL-001 — Unrestricted code-execution tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-sensitive-http-001-sensitive-data-to-outbound-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-SENSITIVE-HTTP-001 — Sensitive data to outbound HTTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-sensitive-messaging-001-sensitive-data-to-messaging-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-SENSITIVE-MESSAGING-001 — Sensitive data to messaging sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-toolresult-novalidate-001-unvalidated-tool-result-reaches-a-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-TOOLRESULT-NOVALIDATE-001 — Unvalidated tool result reaches a sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-untrusted-http-001-untrusted-input-to-outbound-http-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-UNTRUSTED-HTTP-001 — Untrusted input to outbound HTTP body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-untrusted-messaging-001-untrusted-input-relayed-to-messaging-sink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-UNTRUSTED-MESSAGING-001 — Untrusted input relayed to messaging sink
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-webfetch-statechange-001-fetched-content-drives-a-state-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-WEBFETCH-STATECHANGE-001 — Fetched content drives a state change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-overbroad-sql-tool-001-direct-sql-execution-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-OVERBROAD-SQL-TOOL-001 — Direct SQL-execution tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-sensitive-subflow-001-sensitive-data-crosses-into-a-sub-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-SENSITIVE-SUBFLOW-001 — Sensitive data crosses into a sub-flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fs-subflow-untrusted-001-untrusted-input-crosses-into-a-sub-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FS-SUBFLOW-UNTRUSTED-001 — Untrusted input crosses into a sub-flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../importers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Importer coverage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ir/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Graph IR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writing-rules/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Write your own rule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How the taint engine works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Design decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Design decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0001-bootstrap-decisions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 Bootstrap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="rule-catalog">Rule catalog<a class="headerlink" href="#rule-catalog" title="Permanent link">&para;</a></h1>
+<p>flowspect ships 27 rules. Each is authored in the <a href="../writing-rules/">rule DSL</a>;
+add your own with <code>--rules</code>. This page is generated from the bundled pack.</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Severity</th>
+<th>Kind</th>
+<th>What it finds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FS-INJECT-DESERIALIZE-001</code></td>
+<td>🔴 critical</td>
+<td>taint</td>
+<td>Untrusted input to unsafe deserialization</td>
+</tr>
+<tr>
+<td><code>FS-INJECT-EXEC-001</code></td>
+<td>🔴 critical</td>
+<td>taint</td>
+<td>Prompt injection to code execution</td>
+</tr>
+<tr>
+<td><code>FS-INJECT-SQL-001</code></td>
+<td>🔴 critical</td>
+<td>taint</td>
+<td>Prompt injection to SQL execution</td>
+</tr>
+<tr>
+<td><code>FS-TRIFECTA-001</code></td>
+<td>🔴 critical</td>
+<td>taint</td>
+<td>Lethal trifecta (untrusted input + private data + exfiltration)</td>
+</tr>
+<tr>
+<td><code>FS-INDIRECT-EXEC-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>Fetched content to code execution</td>
+</tr>
+<tr>
+<td><code>FS-INDIRECT-SQL-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>Fetched content to SQL execution</td>
+</tr>
+<tr>
+<td><code>FS-INDIRECT-TRIFECTA-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>Fetched content + private data + exfiltration</td>
+</tr>
+<tr>
+<td><code>FS-INJECT-FILEWRITE-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>Untrusted input to file write</td>
+</tr>
+<tr>
+<td><code>FS-INJECT-STATECHANGE-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>Untrusted input to state-changing action</td>
+</tr>
+<tr>
+<td><code>FS-SECRET-HTTP-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>Credential to outbound HTTP</td>
+</tr>
+<tr>
+<td><code>FS-SECRET-MESSAGING-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>Credential to messaging sink</td>
+</tr>
+<tr>
+<td><code>FS-SSRF-001</code></td>
+<td>🟠 high</td>
+<td>taint</td>
+<td>SSRF via user-controlled fetch URL</td>
+</tr>
+<tr>
+<td><code>FS-WEBHOOK-UNAUTH-001</code></td>
+<td>🟠 high</td>
+<td>structural</td>
+<td>Unauthenticated trigger performs state change</td>
+</tr>
+<tr>
+<td><code>FS-DESERIALIZE-NODE-001</code></td>
+<td>🟡 medium</td>
+<td>structural</td>
+<td>Unsafe deserialization component present</td>
+</tr>
+<tr>
+<td><code>FS-FILEREAD-EXFIL-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Local file contents to external sink</td>
+</tr>
+<tr>
+<td><code>FS-HARDCODED-SECRET-001</code></td>
+<td>🟡 medium</td>
+<td>structural</td>
+<td>Hardcoded secret in flow export</td>
+</tr>
+<tr>
+<td><code>FS-MEMORY-EXFIL-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Conversation memory to external sink</td>
+</tr>
+<tr>
+<td><code>FS-OVERBROAD-CODE-TOOL-001</code></td>
+<td>🟡 medium</td>
+<td>structural</td>
+<td>Unrestricted code-execution tool</td>
+</tr>
+<tr>
+<td><code>FS-SENSITIVE-HTTP-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Sensitive data to outbound HTTP</td>
+</tr>
+<tr>
+<td><code>FS-SENSITIVE-MESSAGING-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Sensitive data to messaging sink</td>
+</tr>
+<tr>
+<td><code>FS-TOOLRESULT-NOVALIDATE-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Unvalidated tool result reaches a sink</td>
+</tr>
+<tr>
+<td><code>FS-UNTRUSTED-HTTP-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Untrusted input to outbound HTTP body</td>
+</tr>
+<tr>
+<td><code>FS-UNTRUSTED-MESSAGING-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Untrusted input relayed to messaging sink</td>
+</tr>
+<tr>
+<td><code>FS-WEBFETCH-STATECHANGE-001</code></td>
+<td>🟡 medium</td>
+<td>taint</td>
+<td>Fetched content drives a state change</td>
+</tr>
+<tr>
+<td><code>FS-OVERBROAD-SQL-TOOL-001</code></td>
+<td>🔵 low</td>
+<td>structural</td>
+<td>Direct SQL-execution tool</td>
+</tr>
+<tr>
+<td><code>FS-SENSITIVE-SUBFLOW-001</code></td>
+<td>🔵 low</td>
+<td>taint</td>
+<td>Sensitive data crosses into a sub-flow</td>
+</tr>
+<tr>
+<td><code>FS-SUBFLOW-UNTRUSTED-001</code></td>
+<td>🔵 low</td>
+<td>taint</td>
+<td>Untrusted input crosses into a sub-flow</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rule-details">Rule details<a class="headerlink" href="#rule-details" title="Permanent link">&para;</a></h2>
+<h3 id="fs-inject-deserialize-001-untrusted-input-to-unsafe-deserialization"><code>FS-INJECT-DESERIALIZE-001</code> — Untrusted input to unsafe deserialization<a class="headerlink" href="#fs-inject-deserialize-001-untrusted-input-to-unsafe-deserialization" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> critical · <strong>Kind:</strong> taint</p>
+<p>Untrusted input reaches a node that deserializes data (pickle/eval-style). Unsafe deserialization of attacker-controlled bytes is remote code execution.</p>
+<p><strong>Remediation:</strong> Deserialize only trusted data, use a safe format (JSON with a schema), and never unpickle or eval attacker-influenced content.</p>
+<p><strong>References:</strong> <a href="https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data">1</a></p>
+<h3 id="fs-inject-exec-001-prompt-injection-to-code-execution"><code>FS-INJECT-EXEC-001</code> — Prompt injection to code execution<a class="headerlink" href="#fs-inject-exec-001-prompt-injection-to-code-execution" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> critical · <strong>Kind:</strong> taint</p>
+<p>Untrusted input flows into a node that executes code or shell commands with no validation in between. A crafted payload or prompt injection can be turned into arbitrary execution.</p>
+<p><strong>Remediation:</strong> Never let untrusted text reach a code/shell node directly. Constrain the tool to a fixed command set, validate arguments against an allowlist, or insert an output-validation guard before execution.</p>
+<p><strong>References:</strong> <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">1</a></p>
+<h3 id="fs-inject-sql-001-prompt-injection-to-sql-execution"><code>FS-INJECT-SQL-001</code> — Prompt injection to SQL execution<a class="headerlink" href="#fs-inject-sql-001-prompt-injection-to-sql-execution" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> critical · <strong>Kind:</strong> taint</p>
+<p>Untrusted input reaches a node that runs SQL against a live database. Attacker-controlled text can drive injection or destructive queries.</p>
+<p><strong>Remediation:</strong> Use parameterised queries, restrict the database role to read-only where possible, and validate the model/tool output before it becomes SQL.</p>
+<p><strong>References:</strong> <a href="https://owasp.org/www-community/attacks/SQL_Injection">1</a></p>
+<h3 id="fs-trifecta-001-lethal-trifecta-untrusted-input-private-data-exfiltration"><code>FS-TRIFECTA-001</code> — Lethal trifecta (untrusted input + private data + exfiltration)<a class="headerlink" href="#fs-trifecta-001-lethal-trifecta-untrusted-input-private-data-exfiltration" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> critical · <strong>Kind:</strong> taint</p>
+<p>Untrusted input reaches a sink that can send data outside the flow, and that same sink is also reachable from private/sensitive data. An attacker who controls the input can steer the flow into exfiltrating the private data — the classic "lethal trifecta" of agent security.</p>
+<p><strong>Remediation:</strong> Break one leg of the trifecta: gate the exfiltration sink behind validated output, remove the private-data source from this path, or require human approval before the outbound action.</p>
+<p><strong>References:</strong> <a href="https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/">1</a></p>
+<h3 id="fs-indirect-exec-001-fetched-content-to-code-execution"><code>FS-INDIRECT-EXEC-001</code> — Fetched content to code execution<a class="headerlink" href="#fs-indirect-exec-001-fetched-content-to-code-execution" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>Content pulled from the web (inherently untrusted) reaches a code/shell execution node — a second-order (indirect) prompt-injection path where the attacker controls a page the flow fetches.</p>
+<p><strong>Remediation:</strong> Treat fetched content as untrusted. Do not let it drive code execution; validate or constrain the executor.</p>
+<p><strong>References:</strong> <a href="https://simonwillison.net/tags/prompt-injection/">1</a></p>
+<h3 id="fs-indirect-sql-001-fetched-content-to-sql-execution"><code>FS-INDIRECT-SQL-001</code> — Fetched content to SQL execution<a class="headerlink" href="#fs-indirect-sql-001-fetched-content-to-sql-execution" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>Web-fetched content reaches a SQL execution node, an indirect-injection path into the database.</p>
+<p><strong>Remediation:</strong> Parameterise queries and validate fetched content before it influences SQL.</p>
+<h3 id="fs-indirect-trifecta-001-fetched-content-private-data-exfiltration"><code>FS-INDIRECT-TRIFECTA-001</code> — Fetched content + private data + exfiltration<a class="headerlink" href="#fs-indirect-trifecta-001-fetched-content-private-data-exfiltration" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>Web-fetched (untrusted) content reaches an exfiltration sink that is also reachable from private data — the lethal trifecta driven by indirect injection rather than direct user input.</p>
+<p><strong>Remediation:</strong> Break the path: gate the exfil sink on validated output or remove the private data from a flow that also ingests web content.</p>
+<h3 id="fs-inject-filewrite-001-untrusted-input-to-file-write"><code>FS-INJECT-FILEWRITE-001</code> — Untrusted input to file write<a class="headerlink" href="#fs-inject-filewrite-001-untrusted-input-to-file-write" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>Untrusted input reaches a node that writes files. Attacker-controlled paths or contents enable overwrite, path traversal, or planting executable content.</p>
+<p><strong>Remediation:</strong> Constrain the write path to a fixed directory, sanitise filenames, and never let untrusted text choose the destination path.</p>
+<h3 id="fs-inject-statechange-001-untrusted-input-to-state-changing-action"><code>FS-INJECT-STATECHANGE-001</code> — Untrusted input to state-changing action<a class="headerlink" href="#fs-inject-statechange-001-untrusted-input-to-state-changing-action" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>Untrusted input reaches a node that performs a state-changing side effect (CRUD call, DB write, external mutation) without validation.</p>
+<p><strong>Remediation:</strong> Validate and authorise the action before it fires; require confirmation for destructive operations driven by untrusted input.</p>
+<h3 id="fs-secret-http-001-credential-to-outbound-http"><code>FS-SECRET-HTTP-001</code> — Credential to outbound HTTP<a class="headerlink" href="#fs-secret-http-001-credential-to-outbound-http" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>A node holding secrets/credentials flows into an outbound HTTP request, risking credential leakage to an external endpoint.</p>
+<p><strong>Remediation:</strong> Do not route credential-bearing values into request bodies or query strings. Reference secrets only inside the authenticated node that needs them.</p>
+<h3 id="fs-secret-messaging-001-credential-to-messaging-sink"><code>FS-SECRET-MESSAGING-001</code> — Credential to messaging sink<a class="headerlink" href="#fs-secret-messaging-001-credential-to-messaging-sink" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>A node holding secrets/credentials flows into a messaging sink (email, chat, webhook), risking credential disclosure to a channel.</p>
+<p><strong>Remediation:</strong> Never forward credentials into message contents. Redact secrets before any messaging node.</p>
+<h3 id="fs-ssrf-001-ssrf-via-user-controlled-fetch-url"><code>FS-SSRF-001</code> — SSRF via user-controlled fetch URL<a class="headerlink" href="#fs-ssrf-001-ssrf-via-user-controlled-fetch-url" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> taint</p>
+<p>Untrusted input flows into a fetch/HTTP node whose URL it can influence, enabling server-side request forgery against internal services or metadata endpoints.</p>
+<p><strong>Remediation:</strong> Allowlist destination hosts, forbid internal/link-local ranges, and never let untrusted text set the request URL directly.</p>
+<p><strong>References:</strong> <a href="https://owasp.org/www-community/attacks/Server_Side_Request_Forgery">1</a></p>
+<h3 id="fs-webhook-unauth-001-unauthenticated-trigger-performs-state-change"><code>FS-WEBHOOK-UNAUTH-001</code> — Unauthenticated trigger performs state change<a class="headerlink" href="#fs-webhook-unauth-001-unauthenticated-trigger-performs-state-change" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> high · <strong>Kind:</strong> structural</p>
+<p>A node that both receives untrusted input and performs a state-changing action (e.g. an n8n webhook wired to a mutation) carries no authentication capability — anyone who can reach the endpoint can trigger the action.</p>
+<p><strong>Remediation:</strong> Require authentication on the trigger (header auth, HMAC signature, or a gateway) before it performs any state change.</p>
+<h3 id="fs-deserialize-node-001-unsafe-deserialization-component-present"><code>FS-DESERIALIZE-NODE-001</code> — Unsafe deserialization component present<a class="headerlink" href="#fs-deserialize-node-001-unsafe-deserialization-component-present" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> structural</p>
+<p>A node performs unsafe deserialization (pickle/eval-style). These components are dangerous even before considering data flow.</p>
+<p><strong>Remediation:</strong> Remove the component or replace it with a safe, schema-validated parser.</p>
+<h3 id="fs-fileread-exfil-001-local-file-contents-to-external-sink"><code>FS-FILEREAD-EXFIL-001</code> — Local file contents to external sink<a class="headerlink" href="#fs-fileread-exfil-001-local-file-contents-to-external-sink" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>Content read from the local filesystem flows to an outbound HTTP or messaging sink — a local-file exfiltration path.</p>
+<p><strong>Remediation:</strong> Confirm the file is meant to leave the environment and redact sensitive portions before any external sink.</p>
+<h3 id="fs-hardcoded-secret-001-hardcoded-secret-in-flow-export"><code>FS-HARDCODED-SECRET-001</code> — Hardcoded secret in flow export<a class="headerlink" href="#fs-hardcoded-secret-001-hardcoded-secret-in-flow-export" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> structural</p>
+<p>A node carries an inline credential embedded in the export file. Secrets in an exported flow leak wherever the file travels (git, sharing, backups).</p>
+<p><strong>Remediation:</strong> Move the credential to an environment variable or the builder's secret store and re-export. Rotate any secret already committed.</p>
+<p><strong>References:</strong> <a href="https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_password">1</a></p>
+<h3 id="fs-memory-exfil-001-conversation-memory-to-external-sink"><code>FS-MEMORY-EXFIL-001</code> — Conversation memory to external sink<a class="headerlink" href="#fs-memory-exfil-001-conversation-memory-to-external-sink" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>Conversation/long-term memory (which can accumulate prior sensitive context) flows to an outbound HTTP or messaging sink.</p>
+<p><strong>Remediation:</strong> Do not forward raw memory to external sinks; select and redact the specific fields required.</p>
+<h3 id="fs-overbroad-code-tool-001-unrestricted-code-execution-tool"><code>FS-OVERBROAD-CODE-TOOL-001</code> — Unrestricted code-execution tool<a class="headerlink" href="#fs-overbroad-code-tool-001-unrestricted-code-execution-tool" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> structural</p>
+<p>A code/shell execution component is present. An agent tool that runs arbitrary code is the broadest possible scope and turns any upstream injection into execution.</p>
+<p><strong>Remediation:</strong> Replace with a purpose-built tool exposing only the operations needed, or sandbox the executor and restrict its capabilities.</p>
+<h3 id="fs-sensitive-http-001-sensitive-data-to-outbound-http"><code>FS-SENSITIVE-HTTP-001</code> — Sensitive data to outbound HTTP<a class="headerlink" href="#fs-sensitive-http-001-sensitive-data-to-outbound-http" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>Private/sensitive data (vector store, DB read, internal files) flows to an outbound HTTP request. Even without untrusted input this is a data-egress path.</p>
+<p><strong>Remediation:</strong> Confirm the destination is trusted and the data is meant to leave. Add an output-validation/redaction step before the request.</p>
+<h3 id="fs-sensitive-messaging-001-sensitive-data-to-messaging-sink"><code>FS-SENSITIVE-MESSAGING-001</code> — Sensitive data to messaging sink<a class="headerlink" href="#fs-sensitive-messaging-001-sensitive-data-to-messaging-sink" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>Private/sensitive data flows to a messaging sink (email, chat), a common accidental-disclosure path.</p>
+<p><strong>Remediation:</strong> Verify the recipient channel is authorised for this data and redact fields that should not be shared.</p>
+<h3 id="fs-toolresult-novalidate-001-unvalidated-tool-result-reaches-a-sink"><code>FS-TOOLRESULT-NOVALIDATE-001</code> — Unvalidated tool result reaches a sink<a class="headerlink" href="#fs-toolresult-novalidate-001-unvalidated-tool-result-reaches-a-sink" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>A tool result from a web-fetch node reaches a messaging, outbound-HTTP, or state-changing sink with no output-validation guard on the path — missing validation of tool output.</p>
+<p><strong>Remediation:</strong> Add an output-validation/guardrail node between tool results and any sink that acts on them.</p>
+<h3 id="fs-untrusted-http-001-untrusted-input-to-outbound-http-body"><code>FS-UNTRUSTED-HTTP-001</code> — Untrusted input to outbound HTTP body<a class="headerlink" href="#fs-untrusted-http-001-untrusted-input-to-outbound-http-body" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>Untrusted input reaches an outbound HTTP request. Beyond SSRF, this lets an attacker shape requests the flow makes to third-party services.</p>
+<p><strong>Remediation:</strong> Validate and constrain the request; never forward raw untrusted input into an outbound call.</p>
+<h3 id="fs-untrusted-messaging-001-untrusted-input-relayed-to-messaging-sink"><code>FS-UNTRUSTED-MESSAGING-001</code> — Untrusted input relayed to messaging sink<a class="headerlink" href="#fs-untrusted-messaging-001-untrusted-input-relayed-to-messaging-sink" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>Untrusted input flows to a messaging sink (email, chat, webhook). Without validation this enables spam, phishing relay, or social-engineering through the flow's trusted identity.</p>
+<p><strong>Remediation:</strong> Validate and rate-limit messages derived from untrusted input; do not let arbitrary content be sent under the flow's identity.</p>
+<h3 id="fs-webfetch-statechange-001-fetched-content-drives-a-state-change"><code>FS-WEBFETCH-STATECHANGE-001</code> — Fetched content drives a state change<a class="headerlink" href="#fs-webfetch-statechange-001-fetched-content-drives-a-state-change" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> medium · <strong>Kind:</strong> taint</p>
+<p>Web-fetched (untrusted) content reaches a state-changing action, letting an attacker-controlled page influence a mutation.</p>
+<p><strong>Remediation:</strong> Validate fetched content before it drives any side effect; require confirmation for destructive actions.</p>
+<h3 id="fs-overbroad-sql-tool-001-direct-sql-execution-tool"><code>FS-OVERBROAD-SQL-TOOL-001</code> — Direct SQL-execution tool<a class="headerlink" href="#fs-overbroad-sql-tool-001-direct-sql-execution-tool" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> low · <strong>Kind:</strong> structural</p>
+<p>A node executes SQL directly. Direct database access is a broad scope; prefer narrow, parameterised operations.</p>
+<p><strong>Remediation:</strong> Expose specific queries or stored procedures instead of arbitrary SQL, and use a least-privilege database role.</p>
+<h3 id="fs-sensitive-subflow-001-sensitive-data-crosses-into-a-sub-flow"><code>FS-SENSITIVE-SUBFLOW-001</code> — Sensitive data crosses into a sub-flow<a class="headerlink" href="#fs-sensitive-subflow-001-sensitive-data-crosses-into-a-sub-flow" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> low · <strong>Kind:</strong> taint</p>
+<p>Private/sensitive data flows into a sub-flow whose downstream sinks flowspect cannot see. The data may be exfiltrated inside the callee.</p>
+<p><strong>Remediation:</strong> Review the referenced sub-flow for egress sinks; pass only the minimum data across the boundary.</p>
+<h3 id="fs-subflow-untrusted-001-untrusted-input-crosses-into-a-sub-flow"><code>FS-SUBFLOW-UNTRUSTED-001</code> — Untrusted input crosses into a sub-flow<a class="headerlink" href="#fs-subflow-untrusted-001-untrusted-input-crosses-into-a-sub-flow" title="Permanent link">&para;</a></h3>
+<p><strong>Severity:</strong> low · <strong>Kind:</strong> taint</p>
+<p>Untrusted input flows into a sub-flow/opaque workflow reference. flowspect cannot see inside the sub-flow, so any sink it contains is unanalysed — review the callee for the trifecta and injection sinks.</p>
+<p><strong>Remediation:</strong> Audit the referenced sub-flow with flowspect as well; validate inputs at the boundary before delegating.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.sections", "navigation.top", "content.code.copy", "toc.integrate"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
